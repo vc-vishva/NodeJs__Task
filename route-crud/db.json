@@ -1,0 +1,53 @@
+{
+    "pizza": [
+        {
+            "id": 3,
+            "name": "viva",
+            "price": 78
+        },
+        {
+            "id": 4,
+            "name": "dhyey",
+            "price": 78
+        },
+        {
+            "id": 5,
+            "name": "gaurangcxnmvbnmsdfgbnm",
+            "price": 80
+        }
+    ],
+    "burger": [
+        {
+            "id": 1,
+            "name": "dhyey",
+            "price": 300
+        },
+        {
+            "id": 2,
+            "name": "mahir",
+            "price": 833
+        },
+        {
+            "id": 3,
+            "name": "mahi",
+            "price": 833
+        },
+        {
+            "id": 5,
+            "name": "gaurang",
+            "price": 80
+        }
+    ],
+    "pasta": [
+        {
+            "id": 1,
+            "name": "vishva",
+            "price": 566
+        }
+    ],
+    "counter": {
+        "burger": 6,
+        "pasta": 3,
+        "pizza": 6
+    }
+}
