@@ -63,21 +63,13 @@ app.get('/employees/:id', (req, res) => {
 app.post('/employees', upload.single('profile'), (req, res) => {
     fs.readFile('./db.json', 'utf8', (err, data) => {
       if (err) throw err;
-  
-      // Parse the JSON data from the file
       let employees = [];
-      // try {
-      //   employees = JSON.parse(data);
-      // } catch (err) {
-      //   console.error('Error parsing JSON data:', err);
-      // }
-  
+        employees = JSON.parse(data);
       // Check is an array
       if (!Array.isArray(employees)) {
         res.status(500).send('Invalid database format');
         return;
       }
-  
       // Generate a new ID for the employee
       const newId = employees.length ? employees[employees.length - 1].id + 1 : 1;
   
@@ -106,15 +98,8 @@ app.put('/employees/:id', upload.single('profile'), (req, res) => {
   
     fs.readFile('./db.json', 'utf8', (err, data) => {
       if (err) throw err;
-  
-      // Parse the JSON data from the file
       let employees = [];
-      try {
         employees = JSON.parse(data);
-      } catch (err) {
-        console.error('Error parsing JSON data:', err);
-      }
-  
       // Find ID
       const employeeIndex = employees.findIndex(emp => emp.id === id);
   
@@ -147,12 +132,7 @@ app.delete('/employees/:id', (req, res) => {
   
       // Parse the JSON file
       let employees = [];
-      try {
         employees = JSON.parse(data);
-      } catch (err) {
-        console.error('Error parsing JSON data:', err);
-      }
-  
       // Find id..
       const employeeIndex = employees.findIndex(emp => emp.id === id);
   
