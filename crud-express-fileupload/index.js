@@ -66,11 +66,11 @@ app.post('/employees', upload.single('profile'), (req, res) => {
   
       // Parse the JSON data from the file
       let employees = [];
-      try {
-        employees = JSON.parse(data);
-      } catch (err) {
-        console.error('Error parsing JSON data:', err);
-      }
+      // try {
+      //   employees = JSON.parse(data);
+      // } catch (err) {
+      //   console.error('Error parsing JSON data:', err);
+      // }
   
       // Check is an array
       if (!Array.isArray(employees)) {
