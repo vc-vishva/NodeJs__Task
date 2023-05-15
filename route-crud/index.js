@@ -33,16 +33,8 @@ app.listen(3000, () => {
 
 
 
-// const pizzaArray = data.pizza;
-// const nextId = pizzaArray.length + 1;
-// const newPizza = { id: nextId, name: "newpizzaname", price: 500 };
-// pizzaArray.push(newPizza);
-// const newData = JSON.stringify(data);
-// console.log(newData);
-// //
 
 
 
-// app.listen(3000, () => {
-//     console.log(`Server started on port ${port}`);
-// });
+
+

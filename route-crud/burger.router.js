@@ -1,11 +1,11 @@
 const burgerRouter = require("express").Router();
-const bodyParser = require('body-parser');
 const dbPath = './db.json';
-const fs = require('fs');
-// const data = require('./db.json');
+const fs = require('fs/promises');
+
+
 const data = require(`./${process.env.data}`);
 
-burgerRouter.use(bodyParser.json());
+burgerRouter.use(express.json());
 
 
 //get
@@ -28,7 +28,7 @@ burgerRouter.get('/:id', (req, res) => {
 //creat
 let nextburgerId = data.counter.burger || 1;
 
-burgerRouter.post('/', (req, res) => {
+burgerRouter.post('/', async(req, res) => {
   const { name, price } = req.body;
   const newburger = { id: nextburgerId++, name, price };
   if (!data.burger) {
@@ -37,13 +37,13 @@ burgerRouter.post('/', (req, res) => {
     data.burger.push(newburger);
   }
   data.counter.burger = nextburgerId;
-  fs.writeFileSync(dbPath, JSON.stringify(data));
+ await fs.writeFile(dbPath, JSON.stringify(data));
 
   res.status(201).json(newburger);
 });
 //
 //update
-burgerRouter.put('/:id', (req, res) => {
+burgerRouter.put('/:id', async(req, res) => {
   const id = parseInt(req.params.id);
   const { name, price } = req.body;
 
@@ -53,27 +53,25 @@ burgerRouter.put('/:id', (req, res) => {
     burgerToUpdate.name = name || burgerToUpdate.name;
     burgerToUpdate.price = price || burgerToUpdate.price;
 
-    fs.writeFileSync(dbPath, JSON.stringify(data));
+   await fs.writeFile(dbPath, JSON.stringify(data));
     res.status(200).json({ message: 'burger data updated successfully' });
   } else {
     res.status(404).json({ message: 'burger data not found' });
   }
 });
 //delete
-burgerRouter.delete('/:id', (req, res) => {
+burgerRouter.delete('/:id', async(req, res) => {
   
   const id = parseInt(req.params.id);
   const index = data.burger.findIndex(p => p.id === id);
   if (index >= 0) {
     data.burger.splice(index, 1);
     // data.counter.pizza -= 1;
-    fs.writeFileSync(dbPath, JSON.stringify(data));
+   await fs.writeFile(dbPath, JSON.stringify(data));
     res.status(200).json({ message: 'burger data deleted successfully' });
   } else {
     res.status(404).json({ message: 'burger data  not found' });
   }
 });
-
-
 
 module.exports = burgerRouter;
