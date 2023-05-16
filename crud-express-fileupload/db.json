@@ -1,0 +1,50 @@
+[
+    {
+        "id": 2,
+        "name": "viva",
+        "email": "viva@gmail.com",
+        "profile": "uploads\\1684067842212-BOM.png",
+        "department": "CE",
+        "joining_date": "2022-01-01"
+    },
+    {
+        "id": 3,
+        "name": "rani",
+        "email": "viva@gmail.com",
+        "profile": "uploads\\1684067857981-BOM.png",
+        "department": "CE",
+        "joining_date": "2022-01-01"
+    },
+    {
+        "id": 4,
+        "name": "riyan",
+        "email": "riyan@gmail.com",
+        "profile": "uploads\\1684143180543-BOM.png",
+        "department": "CE",
+        "joining_date": "2022-01-01"
+    },
+    {
+        "id": 5,
+        "name": "riya",
+        "email": "riyan@gmail.com",
+        "profile": "uploads\\1684143222467-BOM.png",
+        "department": "CE",
+        "joining_date": "2022-01-01"
+    },
+    {
+        "id": 6,
+        "name": "riyadfghxfxzx",
+        "email": "dfghjfghfd@gmail.com",
+        "profile": "uploads\\1684143607136-BOM.png",
+        "department": "CE",
+        "joining_date": "2022-01-01"
+    },
+    {
+        "id": 7,
+        "name": "riyadfghxfxzxdj",
+        "email": "dfghjfghfddb@gmail.com",
+        "profile": "uploads\\1684143607136-BOM.png",
+        "department": "CE",
+        "joining_date": "2022-01-01"
+    }
+]
