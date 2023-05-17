@@ -67,7 +67,7 @@ jwtRouter.post("/login", async (req, res) => {
     res.status(500).send("Server error.");
   }
 });
-//
+
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -75,14 +75,14 @@ const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
-  jwt.verify(token, "mysecretkey", (err, decoded) => {
-    if (err) {
-      return res.status(401).send("Invalid token.");
-    }
-    req.email = decoded.email; // Update this line
-    req.password = decoded.password; // Update this line
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.email = decoded.email;
+    req.password = decoded.password;
     next();
-  });
+  } catch (err) {
+    return res.status(401).send("Invalid token.");
+  }
 };
 
 // Protected API
