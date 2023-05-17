@@ -44,7 +44,7 @@ jwtRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     // Check if email exists in db.json file
-    const data = await fs.readFile("db.json");
+    const data = await fs.readFile(dbPath);
     const users = JSON.parse(data.toString());
     const user = users.find((u) => u.email === email);
     if (!user) {
@@ -96,11 +96,21 @@ jwtRouter.get("/protected", verifyToken, async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found.");
     }
-    res.send(`Welcome, ${user.name}!`);
+    
+    const response = {
+      message: "Welcome",
+      user: {
+        name: user.name,
+        email: user.email
+      }
+    };
+    
+    res.send(response);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error.");
   }
 });
+
 
 module.exports = jwtRouter;

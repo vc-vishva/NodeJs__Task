@@ -28,5 +28,10 @@
         "name": "krish",
         "email": "krish@gmail.com",
         "password": "$2b$10$26uYF3LCs47VLA3yrNrDyevU6jrmp0fUekN4F60R5JaO/afuqQ9zC"
+    },
+    {
+        "name": "krishna",
+        "email": "krishna@gmail.com",
+        "password": "$2b$10$RtuHvfXcA.EHzG1s3AtunOqjM.7MIZQgvZtIUNA8S6OYDsTGnoR2O"
     }
 ]
