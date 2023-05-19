@@ -34,11 +34,9 @@ jwtRouter.post("/register", async (req, res) => {
           user: { name, email, password: hashedPassword },
         });
     }
-
     // Add new user
     users.push({ name, email, password: hashedPassword });
     await fs.writeFile("db.json", JSON.stringify(users));
-
     // res.send("User registered successfully.");
     res
       .status(200)
@@ -48,7 +46,6 @@ jwtRouter.post("/register", async (req, res) => {
         user: { name, email, password: hashedPassword },
       });
   } catch (err) {
-    console.error(err);
     res.status(500).send("Server error.");
   }
 });
@@ -77,7 +74,6 @@ jwtRouter.post("/login", async (req, res) => {
     );
     res.send({ token });
   } catch (err) {
-    console.error(err);
     res.status(500).send("Server error.");
   }
 });
@@ -121,7 +117,6 @@ jwtRouter.get("/protected", verifyToken, async (req, res) => {
 
     res.send(response);
   } catch (err) {
-    console.error(err);
     res.status(500).send("Server error.");
   }
 });
