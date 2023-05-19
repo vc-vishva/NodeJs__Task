@@ -25,14 +25,28 @@ jwtRouter.post("/register", async (req, res) => {
     // Check if email already exists
     const user = users.find((u) => u.email === email);
     if (user) {
-      return res.status(400).send("User already registered.");
+      // return res.status(400).send("User already registered.");
+      return res
+        .status(400)
+        .json({
+          status: 400,
+          Message: "User already registered.",
+          user: { name, email, password: hashedPassword },
+        });
     }
 
     // Add new user
     users.push({ name, email, password: hashedPassword });
     await fs.writeFile("db.json", JSON.stringify(users));
 
-    res.send("User registered successfully.");
+    // res.send("User registered successfully.");
+    res
+      .status(200)
+      .json({
+        status: 200,
+        Message: "User registered successfully.",
+        user: { name, email, password: hashedPassword },
+      });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error.");
@@ -96,21 +110,20 @@ jwtRouter.get("/protected", verifyToken, async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found.");
     }
-    
+
     const response = {
       message: "Welcome",
       user: {
         name: user.name,
-        email: user.email
-      }
+        email: user.email,
+      },
     };
-    
+
     res.send(response);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error.");
   }
 });
-
 
 module.exports = jwtRouter;
