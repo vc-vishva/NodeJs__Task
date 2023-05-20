@@ -1,6 +1,7 @@
 const jwtRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
+
 jwtRouter.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
 const dbPath = process.env.DATA_PATH;
