@@ -32,7 +32,7 @@ jwtRouter.post("/register", async (req, res) => {
       user: { name, email },
     });
   } catch (err) {
-    res.status(500).json({ error: "Server error." });
+    res.status(500).json({ error: " Internal Server Error" });
   }
 });
 
@@ -44,7 +44,7 @@ jwtRouter.post("/login", async (req, res) => {
     const users = JSON.parse(data.toString());
     const user = users.find((u) => u.email === email);
     if (!user) {
-      return res.status(401).json({ error: "Invalid email or password." });
+      return res.status(401).json({ error: "Email is not found " });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -58,7 +58,7 @@ jwtRouter.post("/login", async (req, res) => {
     );
     res.json({ token: token });
   } catch (err) {
-    res.status(500).json({ error: "Server error." });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -95,7 +95,7 @@ jwtRouter.get("/protected", verifyToken, async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ error: "Server error." });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 module.exports = jwtRouter;
