@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "name": "mahi ",
+        "email": "mahi@gmail.com",
+        "password": "$2b$10$e.I/njG6w/h76wdDnUusQeJ4i/Dxu5IytEvmUI4J8GUDmCVgAZ6Fm",
+        "phone": "6355548007"
+    },
+    {
+        "id": 2,
+        "name": "dhyey",
+        "email": "dhyey@gmail.com",
+        "password": "$2b$10$hZDghyQMYRRf1OyLoUyW0e6zRLe5GVR00frpJeYjZ/FeMpZmTTip2",
+        "phone": "1234567890"
+    },
+    {
+        "id": 3,
+        "name": "apple",
+        " email": "apple@gmail.com",
+        " password": "$2b$10$hMKkVkT8wDYReCQfQu1fXe3Wb9agVWXYaezFVnoRnahsXGMGdp2am",
+        "phone": 1234567890
+    },
+    {
+        "id": 4,
+        "name": "vishva",
+        "email": "vishvadadhaniya2812@gmail.com",
+        "password": "$2b$10$IKp9dqx6fo4KjdR5uGLui.gVtp4K7euY8y9.8Klabwq1tgwbjsjbG",
+        "phone": "6355548007"
+    }
+]
