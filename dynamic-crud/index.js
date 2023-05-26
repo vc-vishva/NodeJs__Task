@@ -3,10 +3,10 @@ const app = express();
 const PORT = 3000;
 app.use(express.json());
 const data = [];
-   
+
 app.post('/data', (req, res) => {
   const { newData, uniqueColumns } = req.body;
-  console.log(`data:::`, newData);
+  
 
   if (newData && Array.isArray(newData) && newData.length > 0) {
     const sheetName = newData[0].sheetName;
@@ -23,9 +23,8 @@ app.post('/data', (req, res) => {
         });
 
         if (isDuplicate) {
-          return res.status(400).json({
-            error: 'Duplicate data found.', 
-            
+          return res.status(409).json({
+            error: 'Conflict: Duplicate data found.',
           });
         }
       }
@@ -34,17 +33,17 @@ app.post('/data', (req, res) => {
       data.push(...newData);
 
       return res.status(201).json({
-        message: 'Data added successfully.',
+        message: 'Success: Data added successfully.',
         data: newData,
       });
     } else {
-      return res.status(404).json({
-        error: 'Invalid sheetName.',
+      return res.status(400).json({
+        error: 'Bad Request: Invalid sheetName.',
       });
     }
   } else {
     return res.status(400).json({
-      error: 'Invalid data format.',
+      error: 'Bad Request: Invalid data format.',
     });
   }
 });
