@@ -31,14 +31,6 @@ const checkLoggedIn = (req, res, next) => {
   }
 };
 
-const checkNotLoggedIn = (req, res, next) => {
-  if (req.session.user) {
-    res.status(403).redirect("/dashboard");
-  } else {
-    next();
-  }
-};
-
 const readUserData = () => {
   const userData = fs.readFileSync("db.json");
   return JSON.parse(userData);
@@ -57,7 +49,7 @@ const comparePassword = (password, hashedPassword) => {
   return bcrypt.compareSync(password, hashedPassword);
 };
 
-app.get("/login", checkNotLoggedIn, (req, res) => {
+app.get("/login",  (req, res) => {
   res.status(200).sendFile(__dirname + "/login.html");
 });
 
@@ -78,7 +70,7 @@ app.post("/login", (req, res) => {
 });
 
 // Sign up route
-app.get("/signup", checkNotLoggedIn, (req, res) => {
+app.get("/signup",  (req, res) => {
   res.status(200).sendFile(__dirname + "/signup.html");
 });
 
@@ -127,3 +119,5 @@ app.get("/logout", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is started ${port}`);
 });
+
+
