@@ -2,7 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs/promises");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -31,13 +31,13 @@ const checkLoggedIn = (req, res, next) => {
   }
 };
 
-const readUserData = () => {
-  const userData = fs.readFileSync("db.json");
+const readUserData = async() => {
+  const userData =await fs.readFile("db.json");
   return JSON.parse(userData);
 };
 
-const writeUserData = (data) => {
-  fs.writeFileSync("db.json", JSON.stringify(data));
+const writeUserData = async(data) => {
+ await fs.writeFile("db.json", JSON.stringify(data));
 };
 
 const hashPassword = (password) => {
