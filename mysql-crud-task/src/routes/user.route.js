@@ -42,17 +42,3 @@ user.get("/allpermission/:user_id", async (req, res) => {
 });
 
 export default user;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
