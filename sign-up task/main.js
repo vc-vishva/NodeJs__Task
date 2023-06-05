@@ -2,7 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs/promises");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -31,45 +31,37 @@ const checkLoggedIn = (req, res, next) => {
   }
 };
 
-const checkNotLoggedIn = (req, res, next) => {
-  if (req.session.user) {
-    res.status(403).redirect("/dashboard");
-  } else {
-    next();
-  }
-};
-
-const readUserData = () => {
-  const userData = fs.readFileSync("db.json");
+const readUserData = async () => {
+  const userData = await fs.readFile("db.json");
   return JSON.parse(userData);
 };
 
-const writeUserData = (data) => {
-  fs.writeFileSync("db.json", JSON.stringify(data));
+const writeUserData = async (data) => {
+  await fs.writeFile("db.json", JSON.stringify(data));
 };
 
-const hashPassword = (password) => {
+const hashPassword = async (password) => {
   const saltRounds = 10;
-  return bcrypt.hashSync(password, saltRounds);
+  return await bcrypt.hash(password, saltRounds);
 };
 
-const comparePassword = (password, hashedPassword) => {
-  return bcrypt.compareSync(password, hashedPassword);
+const comparePassword = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
 };
 
-app.get("/login", checkNotLoggedIn, (req, res) => {
+app.get("/login", (req, res) => {
   res.status(200).sendFile(__dirname + "/login.html");
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const userData = readUserData();
+  const userData = await readUserData();
   if (req.session.user) {
     res.status(403).redirect("/dashboard");
     return;
   }
   const user = userData.find((user) => user.email === email);
-  if (user && comparePassword(password, user.password)) {
+  if (user && (await comparePassword(password, user.password))) {
     req.session.user = user;
     res.status(200).redirect("/dashboard");
   } else {
@@ -78,20 +70,20 @@ app.post("/login", (req, res) => {
 });
 
 // Sign up route
-app.get("/signup", checkNotLoggedIn, (req, res) => {
+app.get("/signup", (req, res) => {
   res.status(200).sendFile(__dirname + "/signup.html");
 });
 
-app.post("/signup", (req, res) => {
+app.post("/signup", async (req, res) => {
   const { name, email, password, phone } = req.body;
-  const userData = readUserData();
+  const userData = await readUserData();
   // Check if the user already exists
   const existingUser = userData.find((user) => user.email === email);
   if (existingUser) {
     res.status(409).send("You are already signed up");
     return;
   }
-  const hashedPassword = hashPassword(password);
+  const hashedPassword = await hashPassword(password);
   const newUser = {
     id: userData.length + 1,
     name,
@@ -101,7 +93,7 @@ app.post("/signup", (req, res) => {
   };
   // Add user
   userData.push(newUser);
-  writeUserData(userData);
+  await writeUserData(userData);
   req.session.user = newUser;
   res.cookie("userId", newUser.id); //cookiesave
   res.status(201).redirect("/dashboard");
