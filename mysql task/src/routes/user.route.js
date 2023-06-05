@@ -1,10 +1,10 @@
 import express from "express";
 import query from "../db/query.js";
 
- const route1 = express.Router();
+ const user = express.Router();
 
  //8
-route1.get("/allrole/:user_id", async (req, res) => {
+user.get("/allrole/:user_id", async (req, res) => {
   try {
     const { user_id } = req.params;
 
@@ -21,10 +21,8 @@ route1.get("/allrole/:user_id", async (req, res) => {
   }
 });
 
-
-
 //9
-route1.get("/allpermission/:user_id", async (req, res) => {
+user.get("/allpermission/:user_id", async (req, res) => {
   try {
     const  user_id  = req.params.user_id;
 
@@ -43,7 +41,7 @@ route1.get("/allpermission/:user_id", async (req, res) => {
   }
 });
 
-export default route1;
+export default user;
 
 
 

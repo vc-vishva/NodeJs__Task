@@ -1,9 +1,9 @@
 import express from "express";
 import query from "../db/query.js";
 
-const route3 = express.Router();
+const permission = express.Router();
 //1
-route3.get("/permissions/:id", async (req, res) => {
+permission.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const permission = await query(`
@@ -21,7 +21,7 @@ route3.get("/permissions/:id", async (req, res) => {
 });
 //2
 
-route3.post("/add", async (req, res) => {
+permission.post("/", async (req, res) => {
   try {
     const { role, permission } = req.body;
 
@@ -44,7 +44,7 @@ JOIN permission ON role.role= '${role}' AND permission.permission = '${permissio
 });
 //3
 
- route3.delete("/delete", async (req, res) => {
+ permission.delete("/", async (req, res) => {
   try {
     const { role, permission } = req.body;
 
@@ -67,7 +67,7 @@ JOIN permission ON role.role= '${role}' AND permission.permission = '${permissio
 
 //4
 
-route3.delete("/delete/:permission_id", async (req, res) => {
+permission.delete("/:permission_id", async (req, res) => {
   try {
     const id = req.params.permission_id;
 
@@ -83,7 +83,7 @@ route3.delete("/delete/:permission_id", async (req, res) => {
 });
 //5
 
-route3.put("/update", async (req, res) => {
+permission.put("/", async (req, res) => {
   try {
     const { oldPermissionName, newPermissionName } = req.body;
 
@@ -107,4 +107,4 @@ route3.put("/update", async (req, res) => {
   }
 });
 
-export default route3;
+export default permission;

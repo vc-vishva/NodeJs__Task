@@ -1,19 +1,17 @@
 import express from "express";
 import query from "../db/query.js";
 
-const route2= express.Router();
-// //6
+const role = express.Router();
+ //6
 
-route2.put("/update", async (req, res) => {
+role.put("/", async (req, res) => {
   try {
     const { oldRoleName, newRoleNAme } = req.body;
 
     if (!oldRoleName || !newRoleNAme) {
-      return res
-        .status(400)
-        .send({
-          error: "Old permission name and new permission name are required",
-        });
+      return res.status(400).send({
+        error: "Old permission name and new permission name are required",
+      });
     }
 
     const updateQuery = await query(`
@@ -28,24 +26,18 @@ route2.put("/update", async (req, res) => {
   }
 });
 
- //7
-
-route2.delete("/delete/:role_id", async (req, res) => {
+//7
+role.delete("/:role_id", async (req, res) => {
   try {
     const id = req.params.role_id;
-console.log(id);
+    console.log(id);
 
-
-
-        const deleted = await query(`
-        DELETE FROM role WHERE id = '${id}'`);  
-        res.status(200).send({ data: deleted});
-
-
-
+    const deleted = await query(`
+        DELETE FROM role WHERE id = '${id}'`);
+    res.status(200).send({ data: deleted });
   } catch (error) {
     res.send({ error });
   }
 });
 
-export default route2;
+export default role;
