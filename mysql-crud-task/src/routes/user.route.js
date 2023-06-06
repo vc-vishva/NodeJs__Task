@@ -13,7 +13,7 @@ userRouter.get("/:user_id/roles", async (req, res) => {
       FROM user
       JOIN role ON user.id = role.user_id
       WHERE user.id = ${user_id}`);
-
+console.log(getAllRole, "getall role");
     res.send({ data: getAllRole });
   } catch (error) {
     console.error(error);
