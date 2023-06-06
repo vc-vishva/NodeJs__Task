@@ -1,10 +1,10 @@
 import express from "express";
 import query from "../db/query.js";
 
-const userRoutes = express.Router();
+const userRouter = express.Router();
 
 //8
-userRoutes.get("/:user_id/roles", async (req, res) => {
+userRouter.get("/:user_id/roles", async (req, res) => {
   try {
     const { user_id } = req.params;
 
@@ -22,7 +22,7 @@ userRoutes.get("/:user_id/roles", async (req, res) => {
 });
 
 //9
-userRoutes.get("/:user_id/permissions", async (req, res) => {
+userRouter.get("/:user_id/permissions", async (req, res) => {
   try {
     const user_id = req.params.user_id;
 
@@ -41,4 +41,4 @@ userRoutes.get("/:user_id/permissions", async (req, res) => {
   }
 });
 
-export default userRoutes;
+export default userRouter;

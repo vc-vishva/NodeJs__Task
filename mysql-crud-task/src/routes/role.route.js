@@ -1,10 +1,10 @@
 import express from "express";
 import query from "../db/query.js";
 
-const roleRoutes = express.Router();
+const roleRouter = express.Router();
 
 //1 get all permission for roles
-roleRoutes.get("/:role_id/permissions", async (req, res) => {
+roleRouter.get("/:role_id/permissions", async (req, res) => {
   try {
     const id = req.params.role_id;
     const getPermission = await query(`
@@ -15,18 +15,14 @@ roleRoutes.get("/:role_id/permissions", async (req, res) => {
         WHERE role.id = ${id}
       `);
 
-      if (getPermission.affectedRows === 0)
-      return res.status(404).send({ error: "not found" });
-
-
-    res.send({ message: "success", data: getPermission });
+    res.status(200).send({ message: "success", data: getPermission });
   } catch (error) {
     res.status(500).send({ error });
   }
 });
 
 //2 add permision
-roleRoutes.post("/permission", async (req, res) => {
+roleRouter.post("/permission", async (req, res) => {
   try {
     const{ role_id  ,permission_id} = req.body;
     
@@ -36,14 +32,14 @@ roleRoutes.post("/permission", async (req, res) => {
       FROM role
       JOIN permission ON role.id= '${role_id}' AND permission.id = '${permission_id}'`);
 
-    res.send({ message: "success", data: newPermission });
+    res.status(200).send({ message: "success", data: newPermission });
   } catch (error) {
     res.status(500).send({ error });
   }
 });
 
 //3 
-roleRoutes.delete("/permission", async (req, res) => {
+roleRouter.delete("/permission", async (req, res) => {
 
   try {
     const {role_id ,permission_id } = req.body
@@ -53,14 +49,14 @@ roleRoutes.delete("/permission", async (req, res) => {
      WHERE role_id = (SELECT id FROM role WHERE id = '${role_id}')
      AND permission_id = (SELECT id FROM permission WHERE id = '${permission_id}')`);
 
-    res.send({ message: "success", data: deletePermission });
+    res.status(200).send({ message: "success", data: deletePermission });
   } catch (error) {
     res.status(500).send({ error });
   }
 });
 
 //6
-roleRoutes.put("/:role_id", async (req, res) => {
+roleRouter.put("/:role_id", async (req, res) => {
  
   try {
     const { newRoleName } = req.body;
@@ -71,7 +67,7 @@ roleRoutes.put("/:role_id", async (req, res) => {
       SET role = '${newRoleName}'
       WHERE id = ${id}`);
 
-    res.send({ message: "success", data: updaterole });
+    res.status(200).send({ message: "success", data: updaterole });
   } catch (error) {
     console.error("Error executing UPDATE query:", error);
     res.status(500).send({ error });
@@ -79,7 +75,7 @@ roleRoutes.put("/:role_id", async (req, res) => {
 });
 
 //7
-roleRoutes.delete("/:role_id", async (req, res) => {
+roleRouter.delete("/:role_id", async (req, res) => {
   try {
     const id = req.params.role_id;
     
@@ -91,8 +87,8 @@ roleRoutes.delete("/:role_id", async (req, res) => {
 
     res.status(200).send({ data: deleteRole });
   } catch (error) {
-    res.send({ error });
+    res.status(500).send({ error });
   }
 });
 
-export default roleRoutes;
+export default roleRouter;

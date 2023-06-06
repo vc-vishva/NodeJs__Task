@@ -1,9 +1,9 @@
 import express from "express";
 import query from "../db/query.js";
 
-const permissionRoutes = express.Router();
-
-permissionRoutes.delete("/:permission_id", async (req, res) => {
+const permissionRouter = express.Router();
+//4
+permissionRouter.delete("/:permission_id", async (req, res) => {
   try {
     const id = req.params.permission_id;
 
@@ -13,14 +13,14 @@ permissionRoutes.delete("/:permission_id", async (req, res) => {
     DELETE FROM permission WHERE id = ${id}`);
     if (deletePermission.affectedRows === 0)
     return res.status(404).send({ error: "not found" });
-    res.status(500).send({ data: deletePermission });
+    res.status(200).send({ data: deletePermission });
   } catch (error) {
     res.send({ error });
   }
 });
 //5 update permission
 
-permissionRoutes.put("/:permission_id", async (req, res) => {
+permissionRouter.put("/:permission_id", async (req, res) => {
   try {
     const { newPermissionName } = req.body;
     const id = req.params.permission_id;
@@ -37,4 +37,4 @@ permissionRoutes.put("/:permission_id", async (req, res) => {
   }
 });
 
-export default permissionRoutes;
+export default permissionRouter;
