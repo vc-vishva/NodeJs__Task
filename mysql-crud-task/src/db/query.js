@@ -1,6 +1,6 @@
 import connection from "./connection.js";
 
-const query = (query)=>{
+const query = (query)=> {
     return new Promise((resolve, reject)=>{
         connection.query(query, (error, result, fields)=>{
             if(error) return reject(error);
@@ -11,4 +11,4 @@ const query = (query)=>{
     })
 }
 
-export default query;
+export default query;  

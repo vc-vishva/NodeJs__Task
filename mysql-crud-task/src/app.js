@@ -1,13 +1,9 @@
 import express from "express";
-import user from "./routes/user.route.js";
-import permission from "./routes/permission.route.js";
-import role from "./routes/role.route.js";
+import routes from "./routes/index.route.js";
 
-const app= express();
+const app = express();
+
 app.use(express.json());
-app.use("/user", user);
-app.use("/role", role);
-app.use("/permission", permission);
+app.use(routes);
 
-
-app.listen(3000, ()=> console.log("Server is running on ", 3000));
+app.listen(3000, () => console.log("Server is running on 3000"));

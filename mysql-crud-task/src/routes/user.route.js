@@ -1,20 +1,20 @@
 import express from "express";
 import query from "../db/query.js";
 
- const user = express.Router();
+const userRoutes = express.Router();
 
- //8
-user.get("/allrole/:user_id", async (req, res) => {
+//8
+userRoutes.get("/:user_id/roles", async (req, res) => {
   try {
     const { user_id } = req.params;
 
-    const selectQuery = await query(`
+    const getAllRole = await query(`
       SELECT role.role
       FROM user
       JOIN role ON user.id = role.user_id
       WHERE user.id = ${user_id}`);
 
-    res.send({ data: selectQuery });
+    res.send({ data: getAllRole });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error });
@@ -22,11 +22,11 @@ user.get("/allrole/:user_id", async (req, res) => {
 });
 
 //9
-user.get("/allpermission/:user_id", async (req, res) => {
+userRoutes.get("/:user_id/permissions", async (req, res) => {
   try {
-    const  user_id  = req.params.user_id;
+    const user_id = req.params.user_id;
 
-    const selected = await query(`
+    const getAllpermission = await query(`
       SELECT permission.permission
       FROM user
       JOIN role ON user.id = role.user_id
@@ -34,11 +34,11 @@ user.get("/allpermission/:user_id", async (req, res) => {
       JOIN permission ON permissionroles.permission_id = permission.id
       WHERE user.id = ${user_id}`);
 
-    res.send({ data: selected });
+    res.send({ data: getAllpermission });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error });
   }
 });
 
-export default user;
+export default userRoutes;

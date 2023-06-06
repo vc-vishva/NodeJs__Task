@@ -1,25 +1,77 @@
 import express from "express";
 import query from "../db/query.js";
 
-const role = express.Router();
- //6
+const roleRoutes = express.Router();
 
-role.put("/", async (req, res) => {
+//1 get all permission for roles
+roleRoutes.get("/:role_id/permissions", async (req, res) => {
   try {
-    const { oldRoleName, newRoleNAme } = req.body;
+    const id = req.params.role_id;
+    const getPermission = await query(`
+        SELECT permission.permission 
+        FROM permission
+        JOIN permissionroles ON permissionroles.permission_id = permission.id
+        JOIN role ON role.id = permissionroles.role_id
+        WHERE role.id = ${id}
+      `);
 
-    if (!oldRoleName || !newRoleNAme) {
-      return res.status(400).send({
-        error: "Old permission name and new permission name are required",
-      });
-    }
+      if (getPermission.affectedRows === 0)
+      return res.status(404).send({ error: "not found" });
 
-    const updateQuery = await query(`
+
+    res.send({ message: "success", data: getPermission });
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+//2 add permision
+roleRoutes.post("/permission", async (req, res) => {
+  try {
+    const{ role_id  ,permission_id} = req.body;
+    
+    const newPermission = await query(`
+      INSERT INTO permissionroles (role_id, permission_id)
+      SELECT role.id, permission.id
+      FROM role
+      JOIN permission ON role.id= '${role_id}' AND permission.id = '${permission_id}'`);
+
+    res.send({ message: "success", data: newPermission });
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+//3 
+roleRoutes.delete("/permission", async (req, res) => {
+
+  try {
+    const {role_id ,permission_id } = req.body
+   
+    const deletePermission = await query(`
+    DELETE FROM permissionroles
+     WHERE role_id = (SELECT id FROM role WHERE id = '${role_id}')
+     AND permission_id = (SELECT id FROM permission WHERE id = '${permission_id}')`);
+
+    res.send({ message: "success", data: deletePermission });
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+});
+
+//6
+roleRoutes.put("/:role_id", async (req, res) => {
+ 
+  try {
+    const { newRoleName } = req.body;
+    const id = req.params.role_id;
+    
+    const updaterole = await query(`
       UPDATE role
-      SET role = '${newRoleNAme}'
-      WHERE role = '${oldRoleName}'`);
+      SET role = '${newRoleName}'
+      WHERE id = ${id}`);
 
-    res.send({ message: "success", data: updateQuery });
+    res.send({ message: "success", data: updaterole });
   } catch (error) {
     console.error("Error executing UPDATE query:", error);
     res.status(500).send({ error });
@@ -27,17 +79,20 @@ role.put("/", async (req, res) => {
 });
 
 //7
-role.delete("/:role_id", async (req, res) => {
+roleRoutes.delete("/:role_id", async (req, res) => {
   try {
     const id = req.params.role_id;
-    console.log(id);
+    
+    const deleteRole = await query(`
+    DELETE FROM role WHERE id = '${id}'`);
+    console.log(deleteRole);
+    if (deleteRole.affectedRows === 0)
+      return res.status(404).send({ error: "not found" });
 
-    const deleted = await query(`
-        DELETE FROM role WHERE id = '${id}'`);
-    res.status(200).send({ data: deleted });
+    res.status(200).send({ data: deleteRole });
   } catch (error) {
     res.send({ error });
   }
 });
 
-export default role;
+export default roleRoutes;
