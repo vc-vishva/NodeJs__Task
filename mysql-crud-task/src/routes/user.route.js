@@ -27,11 +27,11 @@ userRouter.get("/:user_id/permissions", async (req, res) => {
     const user_id = req.params.user_id;
 
     const getAllpermission = await query(`
-      SELECT permission.permission
-      FROM user
-      JOIN role ON user.id = role.user_id
-      JOIN permissionroles ON role.id = permissionroles.role_id
-      JOIN permission ON permissionroles.permission_id = permission.id
+      SELECT DISTINCT permission.permission
+      FROM permission
+      JOIN permissionroles ON permission.id = permissionroles.permission_id
+      JOIN role ON permissionroles.role_id = role.id 
+      JOIN user ON role.user_id = user.id
       WHERE user.id = ${user_id}`);
 
     res.send({ data: getAllpermission });
