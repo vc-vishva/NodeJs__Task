@@ -32,6 +32,9 @@ roleRouter.post("/permission", async (req, res) => {
       FROM role
       JOIN permission ON role.id= '${role_id}' AND permission.id = '${permission_id}'`);
 
+      if(newPermission.affectedRows === 0)
+      return res.status(404).send({ error: "not found" });
+
     res.status(200).send({ message: "success", data: newPermission });
   } catch (error) {
     res.status(500).send({ error });
@@ -48,6 +51,10 @@ roleRouter.delete("/permission", async (req, res) => {
     DELETE FROM permissionroles
      WHERE role_id = (SELECT id FROM role WHERE id = '${role_id}')
      AND permission_id = (SELECT id FROM permission WHERE id = '${permission_id}')`);
+     if(deletePermission.affectedRows === 0)
+     return res.status(404).send({ error: "not found" });
+
+
 
     res.status(200).send({ message: "success", data: deletePermission });
   } catch (error) {
@@ -66,6 +73,8 @@ roleRouter.put("/:role_id", async (req, res) => {
       UPDATE role
       SET role = '${newRoleName}'
       WHERE id = ${id}`);
+      if(updaterole.affectedRows === 0)
+     return res.status(404).send({ error: "not found" });
 
     res.status(200).send({ message: "success", data: updaterole });
   } catch (error) {

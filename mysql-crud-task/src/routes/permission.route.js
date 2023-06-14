@@ -29,7 +29,8 @@ permissionRouter.put("/:permission_id", async (req, res) => {
       UPDATE permission
       SET permission = '${newPermissionName}'
       WHERE id = ${id}`);
-
+      if (updatePermission.affectedRows === 0)
+      return res.status(404).send({ error: "not found" });
     res.send({ message: "success", data: updatePermission });
   } catch (error) {
     console.error("Error executing UPDATE query:", error);
