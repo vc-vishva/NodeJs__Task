@@ -54,7 +54,7 @@ placesRouter.post("/", verifyToken, async (req, res) => {
   }
 });
 
-//find list of tips****************************************************************************
+//find list of tips
 
 placesRouter.get("/tips", verifyToken, async (req, res) => {
   try {
@@ -70,7 +70,6 @@ placesRouter.get("/tips", verifyToken, async (req, res) => {
 
     console.log("userId", userId);
     console.log("placename", placeNmane);
-    // const user = { user_id: userId, placeNmane: placeNmane };
 
     const getTotal = await db
       .collection("places")
@@ -87,7 +86,6 @@ placesRouter.get("/tips", verifyToken, async (req, res) => {
     }
     "Sum: " + sum;
 
-    // console.log("=============", totalAmount);
     res.status(200).send({ status: 200, message: "sucess", user: userId, sum });
   } catch (error) {
     console.log(error, "error");
@@ -95,7 +93,7 @@ placesRouter.get("/tips", verifyToken, async (req, res) => {
   }
 });
 
-///6*****************************************************************************
+// get repeated  tips percent
 
 placesRouter.get("/place", verifyToken, async (req, res) => {
   try {
@@ -147,7 +145,7 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
   }
 });
 
-// most  visite place **********************************************
+// most  visite place
 placesRouter.get("/mostVisited", verifyToken, async (req, res) => {
   try {
     const userId = req.body.userId;
@@ -157,8 +155,6 @@ placesRouter.get("/mostVisited", verifyToken, async (req, res) => {
     if (userId !== decodedUserId) {
       return res.status(401).send({ message: "Invalid userId." });
     }
-
-    // const { userId } = req.body;
 
     const places = await db
       .collection("places")
