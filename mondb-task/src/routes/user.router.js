@@ -91,33 +91,34 @@ usersRouter.get("/lists", async (req, res) => {
 //5- get specific user
 
 usersRouter.get("/:id", verifyToken, async (req, res) => {
-  // The middleware will verify the token before reaching this handler
-  try {
-    const requestedUserId = req.params.id;
-    const authenticatedUserId = req.userId;
 
-    if (requestedUserId !== authenticatedUserId) {
-      return res
-        .status(401)
-        .send(
-          "Access denied. You are not authorized to access this user's details."
-        );
-    }
+try {
+  const requestedUserId = req.params.id;
+  //     const authenticatedUserId = req.userId;
+// console.log(authenticatedUserId , "========================",requestedUserId);
+//     if (requestedUserId !== authenticatedUserId) {
+//       return res
+//         .status(401)
+//         .send(
+//           "Access denied. You are not authorized to access this user's details."
+//         );
+//     }
 
-    const user = await db
-      .collection("userDetails")
-      .findOne({ _id: new ObjectId(requestedUserId) });
+  const user = await db
+    .collection("userDetails")
+    .findOne({ _id: new ObjectId(requestedUserId) });
 
-    if (user) {
-      res.status(200).send({ status: 200, data: user });
-    } else {
-      res.status(404).send({ status: 404, message: "User not found" });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ status: 500, message: "Internal Server Error" });
+  if (user) {
+    res.status(200).send({ status: 200, data: user });
+  } else {
+    res.status(404).send({ status: 404, message: "User not found" });
   }
+} catch (error) {
+  console.log(error);
+  res.status(500).send({ status: 500, message: "Internal Server Error" });
+}
 });
+
 
 //6- update
 usersRouter.put("/:id", verifyToken, async (req, res) => {

@@ -54,7 +54,7 @@ placesRouter.post("/", verifyToken, async (req, res) => {
   }
 });
 
-//find list of tips
+// find list of tips
 
 placesRouter.get("/tips", verifyToken, async (req, res) => {
   try {
@@ -78,15 +78,20 @@ placesRouter.get("/tips", verifyToken, async (req, res) => {
         { totalAmount: { $sum: ["$billAmount", "$tipAmount"] } }
       )
       .toArray();
+      let totalAmount = 0;
 
-    let sum = 0;
+      for (let i = 0; i < getTotal.length; i++) {
+        const { billAmount, tipAmount } = getTotal[i];
+        totalAmount += billAmount + tipAmount;
+      }
+    // let sum = 0;
 
-    for (let value of getTotal) {
-      sum += value.billAmount + value.tipAmount;
-    }
-    "Sum: " + sum;
+    // for (let value of getTotal) {
+    //   sum = value.billAmount + value.tipAmount;
+    // }
+    // "Sum: " + sum;
 
-    res.status(200).send({ status: 200, message: "sucess", user: userId, sum });
+    res.status(200).send({ status: 200, message: "sucess", user: getTotal, totalAmount });
   } catch (error) {
     console.log(error, "error");
     res.status(500).send({ status: 500, message: "internal server error" });
@@ -121,21 +126,37 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
         }
       )
       .toArray();
-    const countMap = new Map();
-    let maxRepeatedPercentage = null;
-    let maxRepeatedCount = 0;
+    // const countMap = new Map();
+    // let maxRepeatedPercentage = null;
+    // let maxRepeatedCount = 0;
 
-    for (let i = 0; i < percentages.length; i++) {
-      const currentPercent = percentages[i].percent;
-      const count = countMap.get(currentPercent) || 0;
-      const updatedCount = count + 1;
-      countMap.set(currentPercent, updatedCount);
+    // for (let i = 0; i < percentages.length; i++) {
+    //   const currentPercent = percentages[i].percent;
+    //   const count = countMap.get(currentPercent) || 0;
+    //   const updatedCount = count + 1;
+    //   countMap.set(currentPercent, updatedCount);
 
-      if (updatedCount > maxRepeatedCount) {
-        maxRepeatedCount = updatedCount;
-        maxRepeatedPercentage = currentPercent;
-      }
-    }
+    //   if (updatedCount > maxRepeatedCount) {
+    //     maxRepeatedCount = updatedCount;
+    //     maxRepeatedPercentage = currentPercent;
+    //   }
+    // }
+    const countObj = {};
+let maxRepeatedPercentage = null;
+let maxRepeatedCount = 0;
+
+for (let i = 0; i < percentages.length; i++) {
+  const currentPercent = percentages[i].percent;
+  const count = countObj[currentPercent] || 0;
+  const updatedCount = count + 1;
+  countObj[currentPercent] = updatedCount;
+
+  if (updatedCount > maxRepeatedCount) {
+    maxRepeatedCount = updatedCount;
+    maxRepeatedPercentage = currentPercent;
+  }
+}
+
 
     console.log(maxRepeatedPercentage);
     res.send({ data: percentages, maxRepeatedPercentage });
@@ -176,10 +197,11 @@ placesRouter.get("/mostVisited", verifyToken, async (req, res) => {
     const sortedPlaces = Object.keys(placeCounts).sort(
       (a, b) => placeCounts[b] - placeCounts[a]
     );
+    const highestPlace = sortedPlaces[0];
 
     res
       .status(200)
-      .send({ status: 200, message: "success", data: sortedPlaces });
+      .send({ status: 200, message: "success", data: highestPlace });
   } catch (error) {
     console.log(error);
     res.status(500).send({ status: 500, message: "Internal server error" });
