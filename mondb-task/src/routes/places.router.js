@@ -69,6 +69,7 @@ placesRouter.get("/tips", verifyToken, async (req, res) => {
         { totalAmount: { $sum: ["$billAmount", "$tipAmount"] } }
       )
       .toArray();
+<<<<<<< HEAD
     let totalAmount = 0;
 
     for (let i = 0; i < getTotal.length; i++) {
@@ -79,6 +80,22 @@ placesRouter.get("/tips", verifyToken, async (req, res) => {
     res
       .status(200)
       .send({ status: 200, message: "sucess", user: getTotal, totalAmount });
+=======
+      let totalAmount = 0;
+
+      for (let i = 0; i < getTotal.length; i++) {
+        const { billAmount, tipAmount } = getTotal[i];
+        totalAmount += billAmount + tipAmount;
+      }
+    // let sum = 0;
+
+    // for (let value of getTotal) {
+    //   sum = value.billAmount + value.tipAmount;
+    // }
+    // "Sum: " + sum;
+
+    res.status(200).send({ status: 200, message: "sucess", user: getTotal, totalAmount });
+>>>>>>> 3c8f244de12a71413ba87510c1683146ea6865b4
   } catch (error) {
     console.log(error, "error");
     res.status(500).send({ status: 500, message: "internal server error" });
@@ -112,6 +129,7 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
         }
       )
       .toArray();
+<<<<<<< HEAD
     const countObj = {};
     let maxRepeatedPercentage = null;
     let maxRepeatedCount = 0;
@@ -121,12 +139,39 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
       const count = countObj[currentPercent] || 0;
       const updatedCount = count + 1;
       countObj[currentPercent] = updatedCount;
+=======
+    // const countMap = new Map();
+    // let maxRepeatedPercentage = null;
+    // let maxRepeatedCount = 0;
 
-      if (updatedCount > maxRepeatedCount) {
-        maxRepeatedCount = updatedCount;
-        maxRepeatedPercentage = currentPercent;
-      }
-    }
+    // for (let i = 0; i < percentages.length; i++) {
+    //   const currentPercent = percentages[i].percent;
+    //   const count = countMap.get(currentPercent) || 0;
+    //   const updatedCount = count + 1;
+    //   countMap.set(currentPercent, updatedCount);
+
+    //   if (updatedCount > maxRepeatedCount) {
+    //     maxRepeatedCount = updatedCount;
+    //     maxRepeatedPercentage = currentPercent;
+    //   }
+    // }
+    const countObj = {};
+let maxRepeatedPercentage = null;
+let maxRepeatedCount = 0;
+
+for (let i = 0; i < percentages.length; i++) {
+  const currentPercent = percentages[i].percent;
+  const count = countObj[currentPercent] || 0;
+  const updatedCount = count + 1;
+  countObj[currentPercent] = updatedCount;
+
+  if (updatedCount > maxRepeatedCount) {
+    maxRepeatedCount = updatedCount;
+    maxRepeatedPercentage = currentPercent;
+  }
+}
+>>>>>>> 3c8f244de12a71413ba87510c1683146ea6865b4
+
 
     res.send({ data: percentages, maxRepeatedPercentage });
   } catch (error) {
