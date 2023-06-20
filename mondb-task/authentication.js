@@ -1,6 +1,4 @@
-import express from "express";
 import jwt from "jsonwebtoken";
-const authRouter = express.Router();
 
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -12,12 +10,10 @@ export const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
-  console.log("Received token:", token);
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded._id;
-    console.log("Decoded userId:", req.userId);
     next();
   } catch (error) {
     console.log("Token verification error:", error);
@@ -25,6 +21,4 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
-authRouter.use(verifyToken);
-
-export default authRouter;
+export default verifyToken;

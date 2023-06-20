@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import client from "../db/connection.js";
-import { verifyToken } from "./jwt.router.js";
+import verifyToken from "../../authentication.js";
 
 const usersRouter = Router();
 const salt = 10;
@@ -48,14 +48,12 @@ usersRouter.post("/login", async (req, res) => {
     }
 
     const user = await db.collection("userDetails").findOne({ email });
-    console.log("====================", user);
 
     if (!user) {
       return res.status(400).send("Invalid email or password");
     }
 
     const match = await bcrypt.compare(password, user.password);
-    console.log("--------------------", match);
 
     if (!match) {
       return res.status(400).send("Invalid email or password");
@@ -64,7 +62,6 @@ usersRouter.post("/login", async (req, res) => {
     const token = jwt.sign({ email, _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "24h",
     });
-    console.log("token --------------", token);
 
     res.status(200).send({ status: 200, message: "Success", token });
   } catch (error) {
@@ -78,7 +75,7 @@ usersRouter.post("/login", async (req, res) => {
 //4 get all user
 usersRouter.get("/lists", async (req, res) => {
   try {
-    const user = db.collection("userDetails").find().toArray();
+    const user = await db.collection("userDetails").find().toArray();
     // const users = await Promise.all([...getuser.map((user) => user)]);
 
     res.status(200).send({ status: 200, data: user });
@@ -91,19 +88,8 @@ usersRouter.get("/lists", async (req, res) => {
 //5- get specific user
 
 usersRouter.get("/:id", verifyToken, async (req, res) => {
-  // The middleware will verify the token before reaching this handler
   try {
     const requestedUserId = req.params.id;
-    const authenticatedUserId = req.userId;
-
-    if (requestedUserId !== authenticatedUserId) {
-      return res
-        .status(401)
-        .send(
-          "Access denied. You are not authorized to access this user's details."
-        );
-    }
-
     const user = await db
       .collection("userDetails")
       .findOne({ _id: new ObjectId(requestedUserId) });
@@ -114,7 +100,6 @@ usersRouter.get("/:id", verifyToken, async (req, res) => {
       res.status(404).send({ status: 404, message: "User not found" });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).send({ status: 500, message: "Internal Server Error" });
   }
 });
@@ -123,16 +108,7 @@ usersRouter.get("/:id", verifyToken, async (req, res) => {
 usersRouter.put("/:id", verifyToken, async (req, res) => {
   try {
     const requestedUserId = req.params.id;
-    const authenticatedUserId = req.userId;
     const updateUser = req.body;
-
-    if (requestedUserId !== authenticatedUserId) {
-      return res
-        .status(401)
-        .send(
-          "Access denied. You are not authorized to access this user's details."
-        );
-    }
 
     const user = await db
       .collection("userDetails")
@@ -174,8 +150,6 @@ usersRouter.delete("/:id", verifyToken, async (req, res) => {
     const userId = new ObjectId(req.params.id);
     const query = { _id: userId };
     const user = await db.collection("userDetails").deleteOne(query);
-
-    console.log(query, "--------", "query");
 
     if (user.deletedCount > 0) {
       res

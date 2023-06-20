@@ -1,19 +1,17 @@
 import express from "express";
 import client from "../db/connection.js";
-import { verifyToken } from "./jwt.router.js";
+import verifyToken from "../../authentication.js";
 
 const placesRouter = express.Router();
-
 const db = client.db("users");
-import { ObjectId } from "mongodb";
 
 //get all places
 
 placesRouter.get("/", async (req, res) => {
   try {
-    const getPlaces = await db.collection("places").find().toArray();
-    // const users = await Promise.all([...getPlaces.map((user) => user)]);
 
+    const getPlaces = await db.collection("places").find().toArray();
+    
     res.status(200).send({ status: 200, data: getPlaces });
   } catch (error) {
     console.log("Error:", error);
@@ -27,14 +25,13 @@ placesRouter.post("/", verifyToken, async (req, res) => {
     const { placeName, billAmount, tipAmount, id } = req.body;
     const userId = req.body.id;
     const decodedUserId = req.userId;
-    console.log(decodedUserId, "============", userId);
 
     if (userId !== decodedUserId) {
       return res.status(401).send({ message: "Invalid userId." });
     }
 
     const newPlace = {
-      placeNmane: placeName,
+      placeName: placeName,
       billAmount: billAmount,
       tipAmount: tipAmount,
       createdAt: new Date(),
@@ -42,8 +39,6 @@ placesRouter.post("/", verifyToken, async (req, res) => {
       user_id: userId,
     };
 
-    console.log("Token userId:", req.userId);
-    console.log("New place:", newPlace);
     const savePlace = await db.collection("places").insertOne(newPlace);
     res
       .status(200)
@@ -54,39 +49,36 @@ placesRouter.post("/", verifyToken, async (req, res) => {
   }
 });
 
-//find list of tips
+// find list of tips
 
 placesRouter.get("/tips", verifyToken, async (req, res) => {
   try {
-    const { placeNmane } = req.body;
+    const { placeName } = req.body;
 
     const userId = req.body.id;
     const decodedUserId = req.userId;
-    console.log(decodedUserId, "============", userId);
 
     if (userId !== decodedUserId) {
       return res.status(401).send({ message: "Invalid userId." });
     }
 
-    console.log("userId", userId);
-    console.log("placename", placeNmane);
-
     const getTotal = await db
       .collection("places")
       .find(
-        { user_id: userId, placeNmane: placeNmane },
+        { user_id: userId, placeName: placeName },
         { totalAmount: { $sum: ["$billAmount", "$tipAmount"] } }
       )
       .toArray();
+    let totalAmount = 0;
 
-    let sum = 0;
-
-    for (let value of getTotal) {
-      sum += value.billAmount + value.tipAmount;
+    for (let i = 0; i < getTotal.length; i++) {
+      const { billAmount, tipAmount } = getTotal[i];
+      totalAmount += billAmount + tipAmount;
     }
-    "Sum: " + sum;
 
-    res.status(200).send({ status: 200, message: "sucess", user: userId, sum });
+    res
+      .status(200)
+      .send({ status: 200, message: "sucess", user: getTotal, totalAmount });
   } catch (error) {
     console.log(error, "error");
     res.status(500).send({ status: 500, message: "internal server error" });
@@ -99,7 +91,6 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
   try {
     const userId = req.body.userId;
     const decodedUserId = req.userId;
-    console.log(decodedUserId, "============", userId);
 
     if (userId !== decodedUserId) {
       return res.status(401).send({ message: "Invalid userId." });
@@ -111,7 +102,7 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
     const percentages = await db
       .collection("places")
       .find(
-        { user_id: userId, placeNmane: placeName },
+        { user_id: userId, placeName: placeName },
         {
           projection: {
             percent: {
@@ -121,15 +112,15 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
         }
       )
       .toArray();
-    const countMap = new Map();
+    const countObj = {};
     let maxRepeatedPercentage = null;
     let maxRepeatedCount = 0;
 
     for (let i = 0; i < percentages.length; i++) {
       const currentPercent = percentages[i].percent;
-      const count = countMap.get(currentPercent) || 0;
+      const count = countObj[currentPercent] || 0;
       const updatedCount = count + 1;
-      countMap.set(currentPercent, updatedCount);
+      countObj[currentPercent] = updatedCount;
 
       if (updatedCount > maxRepeatedCount) {
         maxRepeatedCount = updatedCount;
@@ -137,7 +128,6 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
       }
     }
 
-    console.log(maxRepeatedPercentage);
     res.send({ data: percentages, maxRepeatedPercentage });
   } catch (error) {
     console.error("Error executing query:", error);
@@ -145,16 +135,10 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
   }
 });
 
-// most  visite place
+// most  visit place
 placesRouter.get("/mostVisited", verifyToken, async (req, res) => {
   try {
     const userId = req.body.userId;
-    const decodedUserId = req.userId;
-    console.log(decodedUserId, "============", userId);
-
-    if (userId !== decodedUserId) {
-      return res.status(401).send({ message: "Invalid userId." });
-    }
 
     const places = await db
       .collection("places")
@@ -164,7 +148,7 @@ placesRouter.get("/mostVisited", verifyToken, async (req, res) => {
     // Count the occurrences of each place
     const placeCounts = {};
     for (let place of places) {
-      const placeName = place.placeNmane;
+      const placeName = place.placeName;
       if (placeCounts[placeName]) {
         placeCounts[placeName]++;
       } else {
@@ -176,10 +160,11 @@ placesRouter.get("/mostVisited", verifyToken, async (req, res) => {
     const sortedPlaces = Object.keys(placeCounts).sort(
       (a, b) => placeCounts[b] - placeCounts[a]
     );
+    const highestPlace = sortedPlaces[0];
 
     res
       .status(200)
-      .send({ status: 200, message: "success", data: sortedPlaces });
+      .send({ status: 200, message: "success", data: highestPlace });
   } catch (error) {
     console.log(error);
     res.status(500).send({ status: 500, message: "Internal server error" });
