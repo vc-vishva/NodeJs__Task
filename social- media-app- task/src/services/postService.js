@@ -185,6 +185,5 @@ export default {
   getOnePostByPostId,
   createPost,
   getAllPosts,
-  // getSearchUserPost,
 };
 // export default createPost
