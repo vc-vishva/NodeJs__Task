@@ -9,9 +9,8 @@ const db = client.db("users");
 
 placesRouter.get("/", async (req, res) => {
   try {
-
     const getPlaces = await db.collection("places").find().toArray();
-    
+
     res.status(200).send({ status: 200, data: getPlaces });
   } catch (error) {
     console.log("Error:", error);
@@ -85,7 +84,7 @@ placesRouter.get("/tips", verifyToken, async (req, res) => {
   }
 });
 
-// get repeated  tips percent
+// get repeated tips percent
 
 placesRouter.get("/place", verifyToken, async (req, res) => {
   try {
@@ -135,7 +134,7 @@ placesRouter.get("/place", verifyToken, async (req, res) => {
   }
 });
 
-// most  visit place
+// most visit place
 placesRouter.get("/mostVisited", verifyToken, async (req, res) => {
   try {
     const userId = req.body.userId;
