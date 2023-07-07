@@ -73,15 +73,25 @@ export const getRepeatedTips = async (
           },
         },
       },
+
       {
         $group: {
-          user: {
-            $push: {
-              $mergeObjects: ["$$ROOT"],
-            },
-          },
-          _id: { percent: "$percent" },
+          // user: {
+          //   $push: {
+          //     $mergeObjects: ["$$ROOT"],
+          //   },
+          // },
+
+          _id: "$percent",
           count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          Percent: "$_id",
+          count: 1,
+          _id: 0,
+          userId: 1,
         },
       },
       {
@@ -111,8 +121,16 @@ export const getMostVisited = async (id: string | JwtPayload | undefined) => {
               $mergeObjects: ["$$ROOT"],
             },
           },
-          _id: { placeName: "$placeName" },
+          _id: "$placeName",
           count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          Place: "$_id",
+          count: 1,
+          _id: 0,
+          userId: 1,
         },
       },
       {
