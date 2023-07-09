@@ -1,7 +1,6 @@
 import Place from "../models/tips";
 import * as tipsService from "../services/tipService";
 import { Express, NextFunction, Request, Response } from "express";
-import { JwtPayload } from "jsonwebtoken";
 import { test } from "../middleware/verify";
 
 // add new tip
@@ -39,7 +38,7 @@ export const tipList = async (
     const { placeName } = req.body;
     const id = req.id;
 
-    const tipList = await tipsService.getTipList(id, placeName);
+    const tipList = await tipsService.getTipList(placeName, id);
 
     console.log("tipList: ", tipList);
 
@@ -61,7 +60,7 @@ export const repeatedTip = async (
     const placeName = req.body.placeName;
     const id = req.id;
 
-    const repeatedTips = await tipsService.getRepeatedTips(id, placeName);
+    const repeatedTips = await tipsService.getRepeatedTips(placeName, id);
 
     res.status(200).json(repeatedTips);
   } catch (error) {

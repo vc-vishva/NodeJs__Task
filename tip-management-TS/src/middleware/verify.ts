@@ -20,7 +20,6 @@ const authMiddleware = async (
         .send({ status: 401, Error: "Access denied. No token provided." });
     }
     const token = authHeader.split(" ")[1];
-    console.log("token", token);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
 

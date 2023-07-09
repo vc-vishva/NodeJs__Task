@@ -12,17 +12,17 @@ export const hashPassword = async (password: string): Promise<string> => {
   return await bcrypt.hash(password, saltRounds);
 };
 
-export const createUser = async (userData: {
-  f_name: string;
-  l_name: string;
-  email: string;
-  password: string;
-}): Promise<IUser> => {
+export const createUser = async (
+  f_name: string,
+  l_name: string,
+  email: string,
+  password: string
+) => {
   const user = new User({
-    f_name: userData.f_name,
-    l_name: userData.l_name,
-    email: userData.email,
-    password: userData.password,
+    f_name: f_name,
+    l_name: l_name,
+    email: email,
+    password: password,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -35,7 +35,7 @@ export const comparePasswords = async (
   return await bcrypt.compare(password, hashedPassword);
 };
 
-export const getUserById = async (id: string | JwtPayload | undefined) => {
+export const getUserById = async (id?: string | JwtPayload) => {
   return await User.findById(id);
 };
 
@@ -43,6 +43,6 @@ export const updateUser = async (user: IUser) => {
   return await user.save();
 };
 
-export const deleteUser = async (id: string | JwtPayload | undefined) => {
+export const deleteUser = async (id?: string | JwtPayload) => {
   return await User.findByIdAndRemove(id);
 };

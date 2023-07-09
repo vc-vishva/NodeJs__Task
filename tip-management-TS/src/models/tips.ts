@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, ObjectId } from "mongoose";
 
 interface IPlace extends Document {
   placeName: string;
@@ -6,7 +6,7 @@ interface IPlace extends Document {
   tipAmount: number;
   createdAt: Date;
   updatedAt: Date;
-  user_id: string;
+  user_id: ObjectId;
 }
 
 const placeSchema: Schema<IPlace> = new Schema(
@@ -16,7 +16,11 @@ const placeSchema: Schema<IPlace> = new Schema(
     tipAmount: { type: Number, required: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    user_id: { type: String, required: true },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { collection: "places" }
 );

@@ -1,12 +1,13 @@
 import { JwtPayload } from "jsonwebtoken";
 import Place from "../models/tips";
 import { IPlace } from "../types/type";
+import { test } from "node:test";
 
 export const createTip = async (
   placeName: string,
   billAmount: number,
   tipAmount: number,
-  id: string | JwtPayload | undefined
+  id?: string | JwtPayload
 ) => {
   const newPlace = new Place({
     placeName: placeName,
@@ -23,8 +24,8 @@ export const createTip = async (
 };
 
 export const getTipList = async (
-  id: string | JwtPayload | undefined,
-  placeName: string
+  placeName: string,
+  id?: string | JwtPayload
 ) => {
   try {
     const tipList = await Place.aggregate([
@@ -58,8 +59,8 @@ export const getTipList = async (
   }
 };
 export const getRepeatedTips = async (
-  id: string | JwtPayload | undefined,
-  placeName: string
+  placeName: string,
+  id?: string | JwtPayload
 ) => {
   try {
     const repeatedTips = await Place.aggregate([
@@ -76,12 +77,6 @@ export const getRepeatedTips = async (
 
       {
         $group: {
-          // user: {
-          //   $push: {
-          //     $mergeObjects: ["$$ROOT"],
-          //   },
-          // },
-
           _id: "$percent",
           count: { $sum: 1 },
         },
@@ -108,7 +103,7 @@ export const getRepeatedTips = async (
   }
 };
 
-export const getMostVisited = async (id: string | JwtPayload | undefined) => {
+export const getMostVisited = async (id?: string | JwtPayload) => {
   try {
     const mostVisited = await Place.aggregate([
       {

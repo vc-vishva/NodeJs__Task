@@ -2,9 +2,9 @@ import User from "../models/users";
 import { IUser } from "../types/type";
 import * as userService from "../services/userService";
 import { validationResult } from "express-validator";
-import { Express, NextFunction, Request, Response } from "express";
+import { Express, Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import { test } from "../middleware/verify";
 
 // sign up
@@ -27,12 +27,12 @@ export const signup = async (req: Request & test, res: Response) => {
 
     const hashPassword = await userService.hashPassword(password);
 
-    const user = await userService.createUser({
+    const user = await userService.createUser(
       f_name,
       l_name,
       email,
-      password: hashPassword,
-    });
+      hashPassword
+    );
 
     res.status(201).send({ message: "User created successfully", data: user });
   } catch (error) {
