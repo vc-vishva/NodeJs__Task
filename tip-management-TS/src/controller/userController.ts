@@ -1,11 +1,10 @@
 import User from "../models/users";
 import { IUser } from "../types/type";
 import * as userService from "../services/userService";
-import { validationResult } from "express-validator";
 import { Express, Request, Response } from "express";
-import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
 import { test } from "../middleware/verify";
+import apiResponse from "../utils/response";
 
 // sign up
 
@@ -13,16 +12,9 @@ export const signup = async (req: Request & test, res: Response) => {
   try {
     const { f_name, l_name, email, password } = req.body;
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const existingUser = await userService.getUserByEmail(email);
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ error: "User with this email already exists" });
+      return apiResponse(res, 409, "User with this email already exists");
     }
 
     const hashPassword = await userService.hashPassword(password);
@@ -34,9 +26,9 @@ export const signup = async (req: Request & test, res: Response) => {
       hashPassword
     );
 
-    res.status(201).send({ message: "User created successfully", data: user });
+    apiResponse(res, 201, "User created successfully", [user]);
   } catch (error) {
-    res.status(500).send({ error: "Failed to create user" });
+    apiResponse(res, 500, "Failed to create user", [], [error]);
   }
 };
 
@@ -46,33 +38,27 @@ export const login = async (req: Request & test, res: Response) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "Email and password are required" });
+      return apiResponse(res, 400, "Email and password are required");
     }
     const user = await userService.getUserByEmail(email);
     if (!user) {
-      return res
-        .status(401)
-        .send({ status: 401, message: "Invalid email or password" });
+      return apiResponse(res, 401, "Invalid email or password");
     }
     const passwordMatch = await userService.comparePasswords(
       password,
       user.password
     );
     if (!passwordMatch) {
-      return res
-        .status(401)
-        .send({ status: 401, message: "Invalid email or password" });
+      return apiResponse(res, 401, "Invalid email or password");
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as Secret, {
       expiresIn: "24h",
     });
-    res.status(200).send({ status: 200, message: "Success", token });
+    apiResponse(res, 201, "Success", [token]);
   } catch (error) {
     console.log("Error:", error);
-    res.status(500).send({ status: 500, message: "Internal Server Error" });
+    apiResponse(res, 500, "Internal Server Error", [], [error]);
   }
 };
 
@@ -84,17 +70,18 @@ export const changePassword = async (req: Request & test, res: Response) => {
     const id = req.id;
     const user: IUser | null = await userService.getUserById(id);
     if (!user) {
-      return res.status(401).send({ status: 401, message: "User not found" });
+      return apiResponse(res, 401, "User not found");
     }
-    const passwordMatch: boolean = await bcrypt.compare(
+    const passwordMatch: boolean = await userService.comparePasswords(
       currentPassword,
       user.password
     );
     if (!passwordMatch) {
-      return res.status(401).send({ error: "Incorrect current password" });
+      return apiResponse(res, 401, "Incorrect current password");
     }
-    const saltRounds = 10;
-    const hashPassword: string = await bcrypt.hash(newPassword, saltRounds);
+
+    const hashPassword: string = await userService.hashPassword(newPassword);
+
     user.password = hashPassword;
     await user.save();
 
@@ -103,9 +90,9 @@ export const changePassword = async (req: Request & test, res: Response) => {
       process.env.JWT_SECRET as Secret,
       { expiresIn: "24h" }
     );
-    res.status(200).send({ message: "Success", data: user });
+    apiResponse(res, 200, "User password  updated successfully", [user]);
   } catch (error) {
-    res.status(500).send({ error: "Failed to change password" });
+    apiResponse(res, 500, "Internal Server Error", [], [error]);
   }
 };
 
@@ -118,7 +105,7 @@ export const ProfileEdit = async (req: Request & test, res: Response) => {
 
     const existingUser = await userService.getUserById(id);
     if (!existingUser) {
-      return res.status(404).json({ error: "User not found" });
+      return apiResponse(res, 404, "User not found");
     }
 
     existingUser.f_name = f_name || existingUser.f_name;
@@ -127,11 +114,9 @@ export const ProfileEdit = async (req: Request & test, res: Response) => {
 
     const updatedUser = await userService.updateUser(existingUser);
 
-    res
-      .status(200)
-      .json({ message: "User updated successfully", data: updatedUser });
+    apiResponse(res, 200, "User updated successfully", [updatedUser]);
   } catch (error) {
-    res.status(500).json({ error: "Failed to update user" });
+    apiResponse(res, 500, "Internal Server Error", [], [error]);
   }
 };
 
@@ -142,11 +127,10 @@ export const deleteUser = async (req: Request & test, res: Response) => {
     const id = req.id;
     const user = await userService.deleteUser(id);
 
-    res
-      .status(200)
-      .send({ status: 200, message: "Successfully deleted", data: user });
+    apiResponse(res, 200, "User password  deleted successfully", [user]);
   } catch (error) {
     console.log(error);
-    res.status(500).send({ status: 500, message: "Internal Server Error" });
+
+    apiResponse(res, 500, "Internal Server Error", [], [error]);
   }
 };

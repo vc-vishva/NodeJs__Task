@@ -1,6 +1,8 @@
 import Place from "../models/tips";
 import * as tipsService from "../services/tipService";
 import { Express, NextFunction, Request, Response } from "express";
+import apiResponse from "../utils/response";
+
 import { test } from "../middleware/verify";
 
 // add new tip
@@ -21,9 +23,9 @@ export const addTips = async (
       id
     );
 
-    res.status(201).send({ message: "Tip created successfully", data: newTip });
+    apiResponse(res, 200, "Tip created successfully", newTip);
   } catch (error) {
-    res.status(500).send({ error: "Failed to create tip" });
+    apiResponse(res, 500, "Failed to create tip");
   }
 };
 
@@ -42,10 +44,10 @@ export const tipList = async (
 
     console.log("tipList: ", tipList);
 
-    res.status(200).json(tipList);
+    apiResponse(res, 200, " get Tip list successfully", tipList);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: 500, message: "Internal server error" });
+    apiResponse(res, 500, "Failed to get tip list ");
   }
 };
 
@@ -62,9 +64,9 @@ export const repeatedTip = async (
 
     const repeatedTips = await tipsService.getRepeatedTips(placeName, id);
 
-    res.status(200).json(repeatedTips);
+    apiResponse(res, 200, " get repeatedTips successfully", repeatedTips);
   } catch (error) {
-    res.status(500).json({ status: 500, message: "Internal server error" });
+    apiResponse(res, 500, "Failed to get repeatedTips");
   }
 };
 
@@ -76,8 +78,8 @@ export const mostVisited = async (req: Request & test, res: Response) => {
 
     const mostVisited = await tipsService.getMostVisited(userId);
 
-    res.status(200).json(mostVisited);
+    apiResponse(res, 200, " get repeatedTips successfully", mostVisited);
   } catch (error) {
-    res.status(500).json({ status: 500, message: "Internal server error" });
+    apiResponse(res, 500, "Failed to get mostVisited");
   }
 };

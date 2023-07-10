@@ -1,5 +1,8 @@
+import mongoose from "mongoose";
 import { JwtPayload } from "jsonwebtoken";
 import Place from "../models/tips";
+const { ObjectId } = mongoose.Types;
+
 import { IPlace } from "../types/type";
 import { test } from "node:test";
 
@@ -42,7 +45,7 @@ export const getTipList = async (
               $mergeObjects: ["$$ROOT"],
             },
           },
-          _id: 0,
+          _id: 1,
           total: { $sum: "$totalAmount" },
         },
       },

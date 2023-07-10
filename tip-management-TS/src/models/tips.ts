@@ -6,7 +6,7 @@ interface IPlace extends Document {
   tipAmount: number;
   createdAt: Date;
   updatedAt: Date;
-  user_id: ObjectId;
+  user_id: string;
 }
 
 const placeSchema: Schema<IPlace> = new Schema(
@@ -17,7 +17,7 @@ const placeSchema: Schema<IPlace> = new Schema(
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     user_id: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.String,
       ref: "User",
       required: true,
     },
