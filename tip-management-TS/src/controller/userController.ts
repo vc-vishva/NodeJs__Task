@@ -57,7 +57,6 @@ export const login = async (req: Request & test, res: Response) => {
     });
     apiResponse(res, 201, "Success", [token]);
   } catch (error) {
-    console.log("Error:", error);
     apiResponse(res, 500, "Internal Server Error", [], [error]);
   }
 };
@@ -129,8 +128,6 @@ export const deleteUser = async (req: Request & test, res: Response) => {
 
     apiResponse(res, 200, "User password  deleted successfully", [user]);
   } catch (error) {
-    console.log(error);
-
     apiResponse(res, 500, "Internal Server Error", [], [error]);
   }
 };

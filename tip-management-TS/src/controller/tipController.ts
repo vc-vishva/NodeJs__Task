@@ -25,7 +25,7 @@ export const addTips = async (
 
     apiResponse(res, 200, "Tip created successfully", newTip);
   } catch (error) {
-    apiResponse(res, 500, "Failed to create tip");
+    apiResponse(res, 500, "Failed to create tip", [], [error]);
   }
 };
 
@@ -42,12 +42,9 @@ export const tipList = async (
 
     const tipList = await tipsService.getTipList(placeName, id);
 
-    console.log("tipList: ", tipList);
-
     apiResponse(res, 200, " get Tip list successfully", tipList);
   } catch (error) {
-    console.log(error);
-    apiResponse(res, 500, "Failed to get tip list ");
+    apiResponse(res, 500, "Failed to get tip list ", [], [error]);
   }
 };
 
