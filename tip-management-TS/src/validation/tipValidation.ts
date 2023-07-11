@@ -10,8 +10,7 @@ export const validatePlace = [
     .notEmpty()
     .isLength({ min: 1, max: 20 })
     .withMessage("Bill amount is required")
-    .isNumeric()
-    .isLength({ min: 1, max: 20 }),
+    .isNumeric(),
   body("tipAmount")
     .notEmpty()
     .isLength({ min: 1, max: 20 })
