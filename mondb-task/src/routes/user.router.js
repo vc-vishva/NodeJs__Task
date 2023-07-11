@@ -127,7 +127,7 @@ usersRouter.put("/:id", verifyToken, async (req, res) => {
 
     const result = await db
       .collection("userDetails")
-      .updateOne({ _id: new ObjectId(requestedUserId) }, { $set: updatedUser });
+      .updateById(userId);
 
     if (result.modifiedCount === 1) {
       res.status(200).send({
