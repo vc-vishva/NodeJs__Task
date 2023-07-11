@@ -4,23 +4,23 @@ export const validateUser = [
   body("f_name")
     .notEmpty()
     .withMessage("First name is required")
-    .isLength({ max: 25 })
+    .isLength({ min: 2, max: 20 })
     .isString(),
   body("l_name")
     .notEmpty()
     .withMessage("Last name is required")
-    .isLength({ max: 25 })
+    .isLength({ min: 2, max: 20 })
     .isString(),
   body("email")
     .notEmpty()
     .withMessage("Email is required")
     .isEmail()
     .withMessage("Invalid email address")
-    .isLength({ max: 25 })
+    .isLength({ min: 5, max: 20 })
     .isString(),
   body("password")
     .notEmpty()
     .withMessage("Password is required")
-    .isLength({ max: 25 })
+    .isLength({ min: 4, max: 20 })
     .isString(),
 ];

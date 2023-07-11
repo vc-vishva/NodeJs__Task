@@ -3,12 +3,12 @@ import * as tipsService from "../services/tipService";
 import { Express, NextFunction, Request, Response } from "express";
 import apiResponse from "../utils/response";
 
-import { test } from "../middleware/verify";
+import { authenticationId } from "../middleware/verify";
 
 // add new tip
 
 export const addTips = async (
-  req: Request & test,
+  req: Request & authenticationId,
   res: Response,
   next: NextFunction
 ) => {
@@ -32,7 +32,7 @@ export const addTips = async (
 // find list of tips
 
 export const tipList = async (
-  req: Request & test,
+  req: Request & authenticationId,
   res: Response,
   next: NextFunction
 ) => {
@@ -51,7 +51,7 @@ export const tipList = async (
 //get repeated tips percent
 
 export const repeatedTip = async (
-  req: Request & test,
+  req: Request & authenticationId,
   res: Response,
   next: NextFunction
 ) => {
@@ -69,7 +69,10 @@ export const repeatedTip = async (
 
 // most visited place
 
-export const mostVisited = async (req: Request & test, res: Response) => {
+export const mostVisited = async (
+  req: Request & authenticationId,
+  res: Response
+) => {
   try {
     const userId = req.id;
 

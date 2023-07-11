@@ -4,20 +4,18 @@ export const validatePlace = [
   body("placeName")
     .notEmpty()
     .withMessage("Place name is required")
-    .isLength({ max: 25 })
+    .isLength({ min: 3, max: 20 })
     .isString(),
   body("billAmount")
     .notEmpty()
-    .isLength({ max: 25 })
+    .isLength({ min: 1, max: 20 })
     .withMessage("Bill amount is required")
     .isNumeric()
-    .isLength({ max: 25 })
-    .withMessage("Bill amount must be a number"),
+    .isLength({ min: 1, max: 20 }),
   body("tipAmount")
     .notEmpty()
-    .isLength({ max: 25 })
+    .isLength({ min: 1, max: 20 })
     .withMessage("Tip amount is required")
-    .isNumeric()
-    .withMessage("Tip amount must be a number"),
+    .isNumeric(),
   body("user_id").notEmpty().withMessage("User ID is required"),
 ];

@@ -4,12 +4,12 @@ import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 import apiResponse from "../utils/response";
 import { ObjectId } from "mongoose";
 
-export interface test {
+export interface authenticationId {
   id?: ObjectId | JwtPayload;
 }
 
 const authMiddleware = async (
-  req: Request & test,
+  req: Request & authenticationId,
   res: Response,
   next: NextFunction
 ) => {
@@ -32,7 +32,6 @@ const authMiddleware = async (
       next();
     }
   } catch (error) {
-    res.status(401).send({ error: error });
     return apiResponse(res, 401, "Unauthorized", [], [error]);
   }
 };

@@ -3,12 +3,15 @@ import { IUser } from "../types/type";
 import * as userService from "../services/userService";
 import { Express, Request, Response } from "express";
 import jwt, { Secret } from "jsonwebtoken";
-import { test } from "../middleware/verify";
+import { authenticationId } from "../middleware/verify";
 import apiResponse from "../utils/response";
 
 // sign up
 
-export const signup = async (req: Request & test, res: Response) => {
+export const signup = async (
+  req: Request & authenticationId,
+  res: Response
+) => {
   try {
     const { f_name, l_name, email, password } = req.body;
 
@@ -34,7 +37,7 @@ export const signup = async (req: Request & test, res: Response) => {
 
 // login
 
-export const login = async (req: Request & test, res: Response) => {
+export const login = async (req: Request & authenticationId, res: Response) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -63,7 +66,10 @@ export const login = async (req: Request & test, res: Response) => {
 
 // changePassword
 
-export const changePassword = async (req: Request & test, res: Response) => {
+export const changePassword = async (
+  req: Request & authenticationId,
+  res: Response
+) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const id = req.id;
@@ -97,7 +103,10 @@ export const changePassword = async (req: Request & test, res: Response) => {
 
 // change user info
 
-export const ProfileEdit = async (req: Request & test, res: Response) => {
+export const ProfileEdit = async (
+  req: Request & authenticationId,
+  res: Response
+) => {
   try {
     const { f_name, l_name, email } = req.body;
     const id = req.id;
@@ -121,7 +130,10 @@ export const ProfileEdit = async (req: Request & test, res: Response) => {
 
 // delete user
 
-export const deleteUser = async (req: Request & test, res: Response) => {
+export const deleteUser = async (
+  req: Request & authenticationId,
+  res: Response
+) => {
   try {
     const id = req.id;
     const user = await userService.deleteUser(id);
