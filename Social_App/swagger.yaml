@@ -1,0 +1,25 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: social media  API
+servers:
+  - url: http://localhost:3000
+    description: Development server
+paths:
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        "200":
+          description: OK
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: OK
