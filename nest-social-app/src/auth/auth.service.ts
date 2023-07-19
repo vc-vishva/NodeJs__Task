@@ -5,7 +5,6 @@ import { Model, ObjectId } from 'mongoose';
 import { User, UserDocument } from '../user/user.schema';
 import { CreateUserDto, LoginUserDto } from '../user/createUser.Dto';
 import * as bcrypt from 'bcrypt';
-import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -56,14 +55,10 @@ export class AuthService {
     if (!passwordMatch) {
       throw new Error('Invalid username or password');
     }
-    console.log(user, 'userrr');
 
     const payload = {
       userId: user._id,
     };
-
-    console.log(user._id, 'sdfghjsadfg');
-    console.log(payload.userId, 'payload idddddd');
 
     const token = this.jwtService.sign(payload);
     return token;

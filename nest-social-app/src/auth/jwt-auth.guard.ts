@@ -25,10 +25,8 @@ export class JwtAuthGuard implements CanActivate {
         const payload = this.jwtService.verify(token);
 
         request.user = payload;
-        console.log(request.user, 'reqxcvb n');
 
         const userId = payload.userId;
-        console.log(userId, 'vvvvvvv');
 
         const user = await this.userModel.findById(userId);
 
@@ -37,7 +35,6 @@ export class JwtAuthGuard implements CanActivate {
         }
 
         request.authenticatedUser = user;
-        console.log(request.authenticatedUser, '::::::::::::::::::::');
 
         return true;
       } catch (error) {

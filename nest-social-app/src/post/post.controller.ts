@@ -23,8 +23,6 @@ export class PostController {
     const { authenticatedUser } = request;
     const userId = new Types.ObjectId(authenticatedUser.id);
 
-    console.log(userId, '**********************8');
-
     createPostDto.userId = userId;
     return this.postService.createPost(createPostDto);
   }

@@ -14,8 +14,6 @@ export class CommentService {
   ) {}
 
   async createComment(postId: string, commentDto: CommentDto) {
-    console.log(postId);
-
     const post = await this.postModel.findById(postId);
 
     if (!post) {
@@ -27,7 +25,6 @@ export class CommentService {
     ) {
       throw new UnauthorizedException('Unauthorized to access comments');
     }
-    console.log(commentDto.userId, '&&&&&&&&&&&&&&&&');
 
     const comment = {
       comment: commentDto.comment,

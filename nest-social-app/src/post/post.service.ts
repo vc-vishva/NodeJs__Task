@@ -73,12 +73,9 @@ export class PostService {
       ]);
 
       console.dir(posts, { depth: null });
-      console.log(postId, 'KKKK');
-      console.log(userId, ':::::::::::::*******************');
 
       return { message: 'post add successfully', posts };
     } catch (error) {
-      console.error(error);
       throw new Error('Failed to fetch post');
     }
   }
@@ -190,7 +187,6 @@ export class PostService {
       console.dir(pipeline, { depth: null });
       return this.postModel.aggregate(pipeline);
     } catch (error) {
-      console.error(error);
       throw new Error('Failed to retrieve posts');
     }
   }
