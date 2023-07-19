@@ -16,9 +16,4 @@ export class AuthController {
     const token = await this.authService.login(loginUserDto);
     return { token };
   }
-  // @Post('login')
-  // async login(@Body() credentials: any) {
-  //   const token = await this.authService.login(credentials);
-  //   return { token };
-  // }
 }

@@ -17,6 +17,9 @@ export class User {
 
   @Prop({ required: true, unique: true })
   username: string;
+
+  @Prop({ type: Boolean, default: false })
+  logoutAll: boolean;
 }
 
 export type UserDocument = User & Document;

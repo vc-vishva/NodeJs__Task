@@ -17,6 +17,8 @@ export class CreateUserDto {
 
   @IsOptional()
   phoneNo?: string;
+  @IsOptional()
+  logoutAll?: boolean;
 }
 
 export class LoginUserDto {

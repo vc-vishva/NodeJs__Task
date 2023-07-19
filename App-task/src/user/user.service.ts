@@ -32,6 +32,7 @@ export class UserService {
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedNewPassword;
+    user.logoutAll = true;
     await user.save();
 
     return { message: 'Password changed successfully', user };
