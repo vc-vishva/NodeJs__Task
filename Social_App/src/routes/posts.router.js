@@ -9,8 +9,6 @@ const postRoutes = express.Router();
 // Create a new post
 postRoutes.post("/create", validatePost, postController.createPost);
 postRoutes.get("/post/:Id", authMiddleware, postController.getOnePostByPostId);
-postRoutes.get("/user",  authMiddleware, postController.getAllPosts);
-// postRoutes.get("/:Id/mention/:searchId",  authMiddleware, postController.getSearchUserPost);
-
+postRoutes.get("/user", authMiddleware, postController.getAllPosts);
 
 export default postRoutes;

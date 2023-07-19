@@ -56,91 +56,6 @@ const postController = {
     }
   },
 
-  // getAllPosts: async (req, res) => {
-  //   try {
-  //     const userId = req.params.Id;
-  //     const page = parseInt(req.query.page);
-  //     const limit = parseInt(req.query.limit);
-  //     const searchText = req.query.search || "";
-  //     // const mentionUserId = req.body.mentionUserId;
-
-  //     const posts = await postService.getAllPosts(
-  //       userId,
-  //       page,
-  //       limit,
-  //       searchText
-  //     );
-
-  //     if (posts.length === 0) {
-  //       return res.status(404).json({
-  //         success: false,
-  //         message: "No posts found for the user",
-  //       });
-  //     }
-
-  //     const totalPosts = posts.length;
-  //     const totalPages = Math.ceil(totalPosts / limit);
-  //     const paginatedPosts = posts.slice((page - 1) * limit, page * limit);
-
-  //     res.status(200).json({
-  //       success: true,
-  //       currentPage: page,
-  //       totalPosts,
-  //       totalPages,
-  //       posts: paginatedPosts,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res
-  //       .status(500)
-  //       .json({ success: false, message: "Failed to retrieve posts" });
-  //   }
-  // },
-
-  // getSearchUserPost : async (req, res) =>{
-  //   try {
-  //     const userId = req.params.Id;
-  //     const searchId = req.params.searchId;
-  //     const page = parseInt(req.query.page);
-  //     const limit = parseInt(req.query.limit);
-  //     const searchText = req.query.search || "";
-
-  //     const posts = await postService.getAllPosts(
-  //       userId,
-  //       searchId,
-  //       page,
-  //       limit,
-  //       searchText
-  //     );
-
-  //     if (posts.length === 0) {
-  //       return res.status(404).json({
-  //         success: false,
-  //         message: "No posts found for the user",
-  //       });
-  //     }
-
-  //     const totalPosts = posts.length;
-  //     const totalPages = Math.ceil(totalPosts / limit);
-  //     const paginatedPosts = posts.slice((page - 1) * limit, page * limit);
-
-  //     res.status(200).json({
-  //       success: true,
-  //       currentPage: page,
-  //       totalPosts,
-  //       totalPages,
-  //       posts: paginatedPosts,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res
-  //       .status(500)
-  //       .json({ success: false, message: "Failed to retrieve posts" });
-  //   }
-  // },
-
-  //*********** */
-
   getAllPosts: async (req, res) => {
     try {
       const userId = req.user._id;
@@ -168,17 +83,9 @@ const postController = {
         });
       }
 
-      // const totalPosts = posts.length;
-      // const totalPages = Math.ceil(totalPosts / limit);
-      // const paginatedPosts = posts.slice((page - 1) * limit, page * limit);
-
       res.status(200).json({
         posts,
         success: true,
-        // currentPage: page,
-        // totalPosts,
-        // totalPages,
-        // posts: paginatedPosts,
       });
     } catch (error) {
       console.error(error);
@@ -190,5 +97,3 @@ const postController = {
 };
 
 export default postController;
-
-//***************** */

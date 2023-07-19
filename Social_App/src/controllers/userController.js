@@ -3,42 +3,6 @@ import userService from "../services/userService.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { generateUniqueUsername } from "../utils/helper.js";
-//
-// const generateUniqueUsername = async (name) => {
-//   try {
-//     const lowercasedName = name.toLowerCase().replace(/\s/g, "");
-//     const randomNumber = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
-//     const username = lowercasedName + randomNumber;
-//     return username;
-//   } catch (error) {}
-// };
-
-/**
- * @swagger
- * components:
- * schemas:
- *  users:
- *   type:object
- *     required:
- *    -name
- *    -email
- *    -username
- *    -password
- *    -phoneNo
- *     properties:
- *         id:
- *         type: ObjectId
- *         name:
- *         type: String
- *         email:
- *         type: String
- *         username:
- *         type: String
- *         password:
- *         type: String
- *         phoneNo
- *         type: number
- */
 
 //1
 const userController = {
@@ -54,7 +18,6 @@ const userController = {
       }
 
       const saltRounds = 10;
-      // const hashedPassword = await bcrypt.hash(password, saltRounds);
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       const username = await generateUniqueUsername(name);

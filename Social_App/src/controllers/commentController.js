@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const { ObjectId } = mongoose.Types;
 import Post from "../models/posts.js";
 import commentService from "../services/commentService.js";
-// import { validateCreateComment } from '../Middlewares/commentMiddleware.js';
 
 const commentController = {
   createComments: async (req, res) => {
