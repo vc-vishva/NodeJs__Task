@@ -6,7 +6,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User } from '../user/user.schema';
 import {
@@ -29,9 +29,12 @@ export class UserService {
     currentPassword: string,
     newPassword: string,
   ): changePasswordModel {
-    const user = await this.userModel.findById(userId);
+    const Id = new Types.ObjectId(userId);
+    console.log(Id, '*************************;');
+
+    const user = await this.userModel.findById(Id);
     if (!user) {
-      throw new NotFoundException('User not found');
+      return createResponse(false, HttpStatus.NOT_FOUND, 'user not found');
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);

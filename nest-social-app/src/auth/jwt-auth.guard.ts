@@ -33,12 +33,18 @@ export class JwtAuthGuard implements CanActivate {
         if (!user) {
           throw new UnauthorizedException('User not found');
         }
+        if (user.logoutAll) {
+          console.log(user.logoutAll, 'asdfghjkl;');
 
+          throw new UnauthorizedException({
+            error: 'User logged out from all devices',
+          });
+        }
         request.authenticatedUser = user;
 
         return true;
       } catch (error) {
-        throw new UnauthorizedException('Invalid token');
+        throw new UnauthorizedException('Invalid token aSDVFBG');
       }
     }
 

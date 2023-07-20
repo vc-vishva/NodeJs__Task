@@ -16,6 +16,7 @@ import {
   changePasswordModel,
   getUserProfileModel,
 } from './userTypes';
+import { AuthenticatedUserId } from './user.decorator';
 
 @Controller('user')
 export class UserController {
@@ -24,12 +25,12 @@ export class UserController {
   @Patch('change')
   @UseGuards(JwtAuthGuard)
   async changePassword(
-    @Request() req,
+    @AuthenticatedUserId() userId: string,
     @Body() changePasswordDto: ChangePasswordDto,
   ): changePasswordModel {
+    console.log(userId), 'lllll';
+
     const { currentPassword, newPassword } = changePasswordDto;
-    const { authenticatedUser } = req;
-    const userId = authenticatedUser.id;
 
     return this.userService.changePassword(
       userId,
@@ -41,21 +42,19 @@ export class UserController {
   @Put('profile')
   @UseGuards(JwtAuthGuard)
   async updateUser(
-    @Request() req,
+    @AuthenticatedUserId() userId: string,
+
     @Body() updateUserDto: UpdateUserDto,
   ): UserUpdateModel {
     const { name, email, phoneNo, username } = updateUserDto;
-    const { authenticatedUser } = req;
-    const userId = authenticatedUser.id;
-
     return this.userService.updateUser(userId, name, email, phoneNo, username);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getUserProfile(@Request() req): getUserProfileModel {
-    const { authenticatedUser } = req;
-    const userId = authenticatedUser.id;
+  async getUserProfile(
+    @AuthenticatedUserId() userId: string,
+  ): getUserProfileModel {
     return this.userService.getUserProfile(userId);
   }
 }

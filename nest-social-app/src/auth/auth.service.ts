@@ -72,9 +72,19 @@ export class AuthService {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new Error('Invalid username or password');
+      return createResponse(
+        false,
+        HttpStatus.BAD_REQUEST,
+        'incorrect password',
+      );
     }
-
+    if (user.logoutAll === true) {
+      user.logoutAll = false;
+      await this.userModel.updateOne(
+        { _id: user._id },
+        { $set: { logoutAll: false } },
+      );
+    }
     const payload = {
       userId: user._id,
     };

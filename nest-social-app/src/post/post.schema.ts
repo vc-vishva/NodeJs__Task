@@ -5,6 +5,9 @@ import { Document, Types, ObjectId } from 'mongoose';
 
 @Schema()
 export class Post {
+  save() {
+    throw new Error('Method not implemented.');
+  }
   _id: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
