@@ -11,6 +11,11 @@ import {
 import { ChangePasswordDto, UpdateUserDto } from './createUser.Dto';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import {
+  UserUpdateModel,
+  changePasswordModel,
+  getUserProfileModel,
+} from './userTypes';
 
 @Controller('user')
 export class UserController {
@@ -21,7 +26,7 @@ export class UserController {
   async changePassword(
     @Request() req,
     @Body() changePasswordDto: ChangePasswordDto,
-  ) {
+  ): changePasswordModel {
     const { currentPassword, newPassword } = changePasswordDto;
     const { authenticatedUser } = req;
     const userId = authenticatedUser.id;
@@ -35,7 +40,10 @@ export class UserController {
 
   @Put('profile')
   @UseGuards(JwtAuthGuard)
-  async updateUser(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+  async updateUser(
+    @Request() req,
+    @Body() updateUserDto: UpdateUserDto,
+  ): UserUpdateModel {
     const { name, email, phoneNo, username } = updateUserDto;
     const { authenticatedUser } = req;
     const userId = authenticatedUser.id;
@@ -45,7 +53,7 @@ export class UserController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getUserProfile(@Request() req) {
+  async getUserProfile(@Request() req): getUserProfileModel {
     const { authenticatedUser } = req;
     const userId = authenticatedUser.id;
     return this.userService.getUserProfile(userId);

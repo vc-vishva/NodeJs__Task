@@ -1,19 +1,30 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  Response,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { Model, ObjectId } from 'mongoose';
 import { User, UserDocument } from '../user/user.schema';
+import { IUser } from '../user/user.interface';
 import { CreateUserDto, LoginUserDto } from '../user/createUser.Dto';
 import * as bcrypt from 'bcrypt';
+import { MyCustomResponse, createResponse } from 'src/apiResponse';
+import { SignupResponseModel, LoginResponseModel } from './types';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
+
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
-  async signup(createUserDto: CreateUserDto) {
+  // sign -up
+  async signup(createUserDto: CreateUserDto): SignupResponseModel {
     const { name, email, phoneNo, password } = createUserDto;
 
     const existingUser = await this.userModel.findOne({ email });
@@ -39,16 +50,24 @@ export class AuthService {
 
     await newUser.save();
 
-    return { message: 'User signup successful' };
+    return createResponse(
+      true,
+      HttpStatus.OK,
+      'User created successfully',
+      newUser,
+    );
   }
-  async login(loginUserDto: LoginUserDto) {
+
+  //login
+  async login(loginUserDto: LoginUserDto): LoginResponseModel {
     const { email, password } = loginUserDto;
 
-    const user = await this.userModel.findOne({ email });
+    const user: User = await this.userModel.findOne({ email });
 
     if (!user) {
       throw new Error('Invalid email or password');
     }
+    console.log(user);
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
@@ -61,6 +80,6 @@ export class AuthService {
     };
 
     const token = this.jwtService.sign(payload);
-    return token;
+    return createResponse(true, HttpStatus.OK, 'success', [token]);
   }
 }

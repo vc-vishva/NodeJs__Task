@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  HttpStatus,
   NotFoundException,
   ForbiddenException,
   BadRequestException,
@@ -8,6 +9,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User } from '../user/user.schema';
+import {
+  changePasswordModel,
+  getUserProfileModel,
+  UserUpdateModel,
+} from './userTypes';
+import { createResponse } from 'src/apiResponse';
 
 @Injectable()
 export class UserService {
@@ -15,11 +22,13 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
+  // change password
+
   async changePassword(
     userId: string,
     currentPassword: string,
     newPassword: string,
-  ) {
+  ): changePasswordModel {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -35,8 +44,10 @@ export class UserService {
     user.logoutAll = true;
     await user.save();
 
-    return { message: 'Password changed successfully', user };
+    return createResponse(true, HttpStatus.OK, 'success', [user]);
   }
+
+  // update profile
 
   async updateUser(
     userId: string,
@@ -44,7 +55,7 @@ export class UserService {
     email?: string,
     phoneNo?: string,
     username?: string,
-  ) {
+  ): UserUpdateModel {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -72,14 +83,19 @@ export class UserService {
       { new: true },
     );
 
-    return { message: 'profile update successfully', updatedUser };
+    return createResponse(
+      true,
+      HttpStatus.OK,
+      'profile update successfully',
+      updatedUser,
+    );
   }
 
-  async getUserProfile(userId: string) {
+  async getUserProfile(userId: string): getUserProfileModel {
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return { message: 'Success', data: user };
+    return createResponse(true, HttpStatus.OK, 'Success', user);
   }
 }
